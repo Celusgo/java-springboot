@@ -33,11 +33,10 @@ public class UserService {
     }
 
     public void delete(Long id) {
-        try {
-            userRepository.deleteById(id);
-        } catch (EmptyResultDataAccessException ex) {
-            throw new ResourceNotFoundException("User not found with id: " + id);
-        }
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + id));
+
+        userRepository.deleteById(existingUser.getId());
     }
 
     public User update(Long id, User user) {
